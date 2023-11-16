@@ -38,6 +38,17 @@ const typeDefs = gql`
     warehouses: [Warehouse]
     movements(warehouseId: ID!): [Movement]
   }
+
+  type Mutation {
+    addProduct(name: String!, size: Float!, hazardous: Boolean!): Product
+    addMovement(
+      date: String!
+      type: String!
+      productId: ID!
+      warehouseId: ID!
+      amount: Float!
+    ): Movement
+  }
 `;
 
 const resolvers = {
@@ -56,6 +67,22 @@ const resolvers = {
         [warehouseId]
       );
       return rows;
+    },
+  },
+  Mutation: {
+    addProduct: async (_, { name, size, hazardous }) => {
+      const { rows } = await pool.query(
+        'INSERT INTO products(name, size, hazardous) VALUES($1, $2, $3) RETURNING *',
+        [name, size, hazardous]
+      );
+      return rows[0];
+    },
+    addMovement: async (_, { date, type, productId, warehouseId, amount }) => {
+      const { rows } = await pool.query(
+        'INSERT INTO movements(date, type, product_id, warehouse_id, amount) VALUES($1, $2, $3, $4, $5) RETURNING *',
+        [date, type, productId, warehouseId, amount]
+      );
+      return rows[0];
     },
   },
 };
