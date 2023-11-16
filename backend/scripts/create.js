@@ -3,17 +3,19 @@ const createDB = async () => {
   try {
     // Create tables
     await pool.query(`
+      CREATE TABLE warehouses (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        size FLOAT NOT NULL,
+        hazardous BOOLEAN
+      );
+    
       CREATE TABLE products (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         size FLOAT NOT NULL,
-        hazardous BOOLEAN NOT NULL
-      );
-
-      CREATE TABLE warehouses (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        size FLOAT NOT NULL
+        hazardous BOOLEAN NOT NULL,
+        warehouse_id INT REFERENCES warehouses(id)
       );
 
       CREATE TABLE movements (

@@ -14,6 +14,8 @@ const typeDefs = gql`
     id: ID!
     name: String!
     size: Float!
+    products: [Product!]!
+    hazardous: Boolean!
   }
 
   type Movement {
@@ -97,7 +99,59 @@ const resolvers = {
       }
     },
   },
+  Warehouse: {
+    products: async (parent, args, context, info) => {
+      try {
+        const products = await fetchProductsByWarehouseId(parent.id);
+        return products || [];
+      } catch (error) {
+        console.error('Error fetching products for warehouse:', error);
+        throw new Error('Unable to fetch products for warehouse');
+      }
+    },
+    hazardous: async (parent, args, context, info) => {
+      try {
+        // Fetch the first product in the warehouse
+        const result = await pool.query(
+          'SELECT hazardous FROM products WHERE warehouse_id = $1 ORDER BY id LIMIT 1',
+          [parent.id]
+        );
+
+        if (result.rows.length > 0) {
+          // Determine the hazardous status based on the hazardous field of the first product
+          const hazardousStatus = result.rows[0].hazardous;
+
+          // Update the hazardous field in the Warehouse table
+          await pool.query('UPDATE warehouses SET hazardous = $1 WHERE id = $2', [
+            hazardousStatus,
+            parent.id,
+          ]);
+
+          return hazardousStatus;
+        } else {
+          // If no product is found, default to false
+          return false;
+        }
+      } catch (error) {
+        console.error('Error determining and updating hazardous status for warehouse:', error);
+        throw new Error('Unable to determine and update hazardous status for warehouse');
+      }
+    },
+  },
 };
+
+async function fetchProductsByWarehouseId(warehouseId) {
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM products WHERE warehouse_id = $1',
+      [warehouseId]
+    );
+    return rows;
+  } catch (error) {
+    console.error('Error fetching products by warehouse ID:', error);
+    throw new Error('Unable to fetch products by warehouse ID');
+  }
+} 
 
 const app = express();
 
