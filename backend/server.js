@@ -20,8 +20,8 @@ const typeDefs = gql`
     id: ID!
     date: String!
     type: String!
-    product: Product!
-    warehouse: Warehouse!
+    product: Product
+    warehouse: Warehouse
     amount: Float!
   }
 
@@ -75,6 +75,26 @@ const resolvers = {
         [date, type, productId, warehouseId, amount]
       );
       return rows[0];
+    },
+  },
+  Movement: {
+    product: async (parent, args, context, info) => {
+      try {
+        const { rows } = await pool.query('SELECT * FROM products WHERE id = $1', [parent.product_id]);
+        return rows[0];
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        throw new Error('Unable to fetch product');
+      }
+    },
+    warehouse: async (parent, args, context, info) => {
+      try {
+        const { rows } = await pool.query('SELECT * FROM warehouses WHERE id = $1', [parent.warehouse_id]);
+        return rows[0];
+      } catch (error) {
+        console.error('Error fetching warehouse:', error);
+        throw new Error('Unable to fetch warehouse');
+      }
     },
   },
 };
