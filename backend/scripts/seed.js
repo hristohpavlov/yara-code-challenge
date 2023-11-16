@@ -1,39 +1,6 @@
-const { Pool } = require('pg');
-//establish connection to postgre
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'postgres',
-    password: '1234',
-    port: 5432,
-});
-
+const pool = require('./pgcredentials.js');
 const seedData = async () => {
   try {
-    // Create tables
-    await pool.query(`
-      CREATE TABLE products (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        size FLOAT NOT NULL,
-        hazardous BOOLEAN NOT NULL
-      );
-
-      CREATE TABLE warehouses (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        size FLOAT NOT NULL
-      );
-
-      CREATE TABLE movements (
-        id SERIAL PRIMARY KEY,
-        date DATE NOT NULL,
-        type VARCHAR(50) NOT NULL,
-        product_id INT REFERENCES products(id) ON DELETE CASCADE,
-        warehouse_id INT REFERENCES warehouses(id) ON DELETE CASCADE,
-        amount FLOAT NOT NULL
-      );
-    `);
     // Seed Products
     await pool.query('INSERT INTO products(name, size, hazardous) VALUES($1, $2, $3)', [
       'Product 1',

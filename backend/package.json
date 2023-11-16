@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node scripts/seed.js && node server.js",
     "seed": "node scripts/seed.js",
-    "wipeDB": "node scripts/wipe.js"
+    "wipeDB": "node scripts/wipe.js",
+    "createDB": "node scripts/create.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,12 +1,4 @@
-const { Pool } = require('pg');
-//establish connection to postgre
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'postgres',
-    password: '1234',
-    port: 5432,
-});
+const pool = require('./pgcredentials.js');
 
 const wipeTables = async () => {
   try {

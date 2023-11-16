@@ -1,14 +1,6 @@
 const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
-const { Pool } = require('pg');
-
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'postgres',
-  password: '1234',
-  port: 5432,
-});
+const pool = require('./scripts/pgcredentials.js');
 
 const typeDefs = gql`
   type Product {
