@@ -10,3 +10,12 @@ export const GET_PRODUCTS = gql`
       }
   }
 `;
+
+export const GET_WAREHOUSES = gql`
+  query {
+    warehouses {
+      id
+      name
+    }
+  }
+`;
