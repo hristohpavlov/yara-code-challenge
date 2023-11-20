@@ -9,6 +9,9 @@ const AppLayout: React.FC = () => {
       <nav>
         <ul>
           <li>
+            <Link to="/">Stock Management App</Link>
+          </li>
+          <li>
             <Link to="/product-entry">Product Entry</Link>
           </li>
           <li>

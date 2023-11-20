@@ -1,4 +1,4 @@
-const pool = require('./pgcredentials.js');
+const pool = require('../utils/pgcredentials.js');
 
 const wipeTables = async () => {
   try {
@@ -7,10 +7,8 @@ const wipeTables = async () => {
   } catch (error) {
     console.error('Error wiping database tables:', error);
   } finally {
-    // Close the database connection
     await pool.end();
   }
 };
 
-// Run the wipe tables function
 wipeTables();

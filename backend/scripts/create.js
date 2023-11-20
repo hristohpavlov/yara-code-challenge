@@ -1,4 +1,4 @@
-const pool = require('./pgcredentials.js');
+const pool = require('../utils/pgcredentials.js');
 const createDB = async () => {
   try {
     // Create tables
@@ -14,8 +14,7 @@ const createDB = async () => {
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         size FLOAT NOT NULL,
-        hazardous BOOLEAN NOT NULL,
-        warehouse_id INT REFERENCES warehouses(id)
+        hazardous BOOLEAN
       );
 
       CREATE TABLE movements (
@@ -31,10 +30,8 @@ const createDB = async () => {
   } catch (error) {
     console.error('Error creating database:', error);
   } finally {
-    // Close the database connection
     await pool.end();
   }
 };
 
-// Run the create function
 createDB();

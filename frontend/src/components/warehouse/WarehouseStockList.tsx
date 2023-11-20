@@ -1,44 +1,23 @@
 import { useQuery } from '@apollo/client';
-import { GET_MOVEMENTS, GET_WAREHOUSE_WITH_PRODUCTS } from '../../graphql/queries';
+import {  GET_MOVEMENTS } from '../../graphql/queries';
+import { Movement } from '../../graphql/types';
+import { useEffect, useState } from 'react';
 interface warehouseProps{
-    selectedWarehouseId?: any
+    selectedWarehouseId?: string
   }
 
 function WarehouseStockList(props: warehouseProps) {
   const { loading: movementsLoading, error: movementsError, data: movementsData } = useQuery(GET_MOVEMENTS, {
     variables: { warehouseId: props.selectedWarehouseId },
   });
-  const { loading, error, data: warehouseData } = useQuery(GET_WAREHOUSE_WITH_PRODUCTS);
+  // console.log(props.selectedWarehouseId)
+  
+  
   if (movementsLoading) return <p>Loading...</p>;
   if (movementsError) return <p>Error: {movementsError?.message}</p>;
-console.log(warehouseData.warehouses
-    .find((warehouse: any) => warehouse.id === props.selectedWarehouseId).products);
   return (
     <div>
-        <h3>Products from Warehouse: {props.selectedWarehouseId}</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Product ID</th>
-                <th>Product Name</th>
-                <th>Product Size</th>
-                <th>Product Hazardous</th>
-              </tr>
-            </thead>
-            <tbody>
-                <div>
-                <h3>Products in Warehouse: {props.selectedWarehouseId}</h3>
-                    <ul>
-                    {warehouseData?.warehouses?.find((warehouse: any) => warehouse.id === props.selectedWarehouseId)
-                        .products?.map((product: any) => (
-                        <li key={product.id}>
-                            {product.name} - Size: {product.size}, Hazardous: {product.hazardous ? 'Yes' : 'No'}
-                        </li>
-                        ))}
-                    </ul>
-                </div>
-            </tbody>
-          </table>
+        
           <h3>Movements for Warehouse: {props.selectedWarehouseId}</h3>
           <table>
             <thead>
@@ -57,7 +36,7 @@ console.log(warehouseData.warehouses
               </tr>
             </thead>
             <tbody>
-              {movementsData.movements.map((movement: any) => (
+              {movementsData.movements.map((movement: Movement) => (
                 <tr key={movement.id}>
                   <td>{movement.id}</td>
                   <td>{movement.date}</td>

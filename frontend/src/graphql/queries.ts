@@ -3,10 +3,10 @@ import { gql } from '@apollo/client';
 export const GET_PRODUCTS = gql`
   query {
     products {
-        name
-        size
-        hazardous
-        id
+      id
+      name
+      size
+      hazardous
       }
   }
 `;
@@ -16,26 +16,11 @@ export const GET_WAREHOUSES = gql`
     warehouses {
       id
       name
+      hazardous
     }
   }
 `;
 
-export const GET_WAREHOUSE_WITH_PRODUCTS = gql`
-  query {
-    warehouses {
-      hazardous
-      id
-      name
-      products {
-        size
-        name
-        id
-        hazardous
-      }
-      size
-    }
-  }
-`;
 
 export const GET_MOVEMENTS = gql`
   query GetMovements($warehouseId: ID!) {
@@ -57,4 +42,25 @@ export const GET_MOVEMENTS = gql`
       }
     }
   }
+`;
+
+export const GET_IMPORT_MOVEMENTS = gql`
+query GetImportMovements($warehouseId: ID!) {
+  movements(type: "import", warehouseId: $warehouseId) {
+    id
+    date
+    type
+    amount
+    product {
+      id
+      name
+      size
+      hazardous
+    }
+    warehouse {
+      id
+      name
+    }
+  }
+}
 `;

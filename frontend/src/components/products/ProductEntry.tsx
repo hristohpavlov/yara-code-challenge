@@ -18,7 +18,6 @@ function ProductEntry(){
       await addProduct({
         variables: { name, size, hazardous },
       });
-      // Update local state
       setName('');
       setSize(0.0);
       setHazardous(false);

@@ -5,8 +5,8 @@ import ProductsList from "./ProductsList";
 function ProductEntryComponent(){
   return (
     <div>
-      <ProductEntry />
-      <ProductsList />
+        <ProductsList />
+        <ProductEntry />
     </div>
   );
 };

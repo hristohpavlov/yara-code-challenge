@@ -1,6 +1,7 @@
 import React from 'react';
 import { GET_PRODUCTS } from '../../graphql/queries';
 import { useQuery } from '@apollo/client';
+import { Product } from '../../graphql/types';
 
 function ProductsList() {
   const { loading, error, data } = useQuery(GET_PRODUCTS);
@@ -21,7 +22,7 @@ function ProductsList() {
               </tr>
             </thead>
             <tbody>
-              {products.map((product: any) => (
+              {products.map((product: Product) => (
                 <tr key={product.id}>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
