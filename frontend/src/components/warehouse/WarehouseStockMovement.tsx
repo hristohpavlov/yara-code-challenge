@@ -5,7 +5,7 @@ import { GET_MOVEMENTS, GET_IMPORT_MOVEMENTS, GET_PRODUCTS, GET_WAREHOUSES} from
 import { Movement, Product, Warehouse } from '../../graphql/types';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
+import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 interface warehouseProps{
   selectedWarehouseId?: string
 }
@@ -116,21 +116,6 @@ function WarehouseStockMovement(props: warehouseProps) {
           console.error('Not enough stock to export');
         }
       }
-      // if (
-      //   (type === 'import' && stockCheckResult.remainingStockSpace >= 0) ||
-      //   (type === 'export' && stockCheckResult.currentStockLevel >= amount)
-      // ) {
-      // await addMovement({
-      //   variables: { date, type, productId: selectedProduct, warehouseId: props.selectedWarehouseId, amount },
-      // });
-      // // Update local state
-      // // setDate(today)
-      // setAmount(0.0)
-      // setType('import')
-      // setSelectedProduct(products?.filter((product: Product) => (product.hazardous === hazardousWare || hazardousWare === null))[0].id)      
-      // } else {
-      //   console.error("Not enough stock to export")
-      // }
     } catch (error) {
       console.error('Error adding movement:', error);
     }
@@ -158,50 +143,85 @@ function WarehouseStockMovement(props: warehouseProps) {
       console.error('Error calculating stock:', error);
     }
   };
-  let warehouseSize = movementsData?.movements[0]?.warehouse?.size;
   
   return (
-        <div>
-        <h2>Warehouse Stock Movement</h2>
-        <div>
+    <Container>
+    <h2>Warehouse Stock Movement</h2>
+    <Container>
+      <Row>
+        <Col>
+          <div>
             <p>Current Stock Level: {stockCalculations?.currentStockLevel}</p>
             <p>Remaining Stock Space: {stockCalculations?.remainingStockSpace}</p>
-        </div>
-        <form onSubmit={handleSubmit}>
-            <label>Type (import/export):</label>
-            <select value={type} onChange={(e) => setType(e.target.value)} required>
-              {movementTypes.map((movementType) => (
-                <option key={movementType} value={movementType}>
-                  {movementType}
-                </option>
-              ))}
-            </select>
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="movementType">
+              <Form.Label>Type (import/export):</Form.Label>
+              <Form.Control as="select" value={type} onChange={(e) => setType(e.target.value)} required>
+                {movementTypes.map((movementType) => (
+                  <option key={movementType} value={movementType}>
+                    {movementType}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
 
-            <label>Date:</label>
-            {type === 'import' && <DatePicker selected={date} onChange={(date) => setDate(date)} />}
-            {type === 'export' && <DatePicker selected={date} onChange={(date) => setDate(date)} minDate={today}/>}
+            <Form.Group controlId="date">
+              <Form.Label>Date:</Form.Label>
+              {type === 'import' && <InputGroup>
+                <DatePicker
+                  selected={date}
+                  onChange={(date) => setDate(date)}
+                  dateFormat="yyyy-MM-dd"
+                  className="form-control" // Add custom styling here
+                />
+              </InputGroup>}
+              {type === 'export' && <InputGroup>
+                <DatePicker
+                  selected={date}
+                  onChange={(date) => setDate(date)}
+                  dateFormat="yyyy-MM-dd"
+                  minDate={today}
+                  className="form-control" // Add custom styling here
+                />
+              </InputGroup>}
+            </Form.Group>
 
-            <label>Choose Product:</label>
-            <select value={selectedProduct} onChange={(e) => {setSelectedProduct(e.target.value)}} required>
-            {type === 'export' && importedProducts?.map((importedProduct: any) => (
-              <option key={importedProduct.product.id} value={importedProduct.product.id}>
-              {importedProduct.product.name}
-              </option>
-            ))}
-            {type === 'import' && products
-              .filter((product: Product) => (product.hazardous === hazardousWare || hazardousWare === null))
-              .map((product: Product) => (
-                <option key={product.id} value={product.id}>
-                  {product.name}
-                </option>
-              ))}
-            </select>
-            <label>Amount:</label>
-            <input type="number" value={amount} onChange={(e) => setAmount(parseFloat(e.target.value))} required />
+            <Form.Group controlId="chooseProduct">
+              <Form.Label>Choose Product:</Form.Label>
+              <Form.Control as="select" value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} required>
+                {type === 'export' && importedProducts?.map((importedProduct: any) => (
+                  <option key={importedProduct.product.id} value={importedProduct.product.id}>
+                    {importedProduct.product.name}
+                  </option>
+                ))}
+                {type === 'import' && products
+                  .filter((product: Product) => (product.hazardous === hazardousWare || hazardousWare === null))
+                  .map((product: Product) => (
+                    <option key={product.id} value={product.id}>
+                      {product.name}
+                    </option>
+                  ))}
+              </Form.Control>
+            </Form.Group>
 
-            <button type="submit">Add Movement</button>
-        </form>
-        </div>
+            <Form.Group controlId="amount">
+              <Form.Label>Amount:</Form.Label>
+              <Form.Control type="number" value={amount} onChange={(e) => setAmount(parseFloat(e.target.value))} required />
+            </Form.Group>
+
+            <Button variant="primary" type="submit">
+              Add Movement
+            </Button>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
+  </Container>
   );
 };
 

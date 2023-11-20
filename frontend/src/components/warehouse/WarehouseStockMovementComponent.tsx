@@ -4,6 +4,7 @@ import WarehouseStockMovement from "./WarehouseStockMovement";
 import { useState } from "react";
 import WarehouseStockList from "./WarehouseStockList";
 import { Warehouse } from "../../graphql/types";
+import { Container, Row, Col, Form } from 'react-bootstrap';
 
 function WarehouseStockMovementComponent(){
     const { loading, error, data } = useQuery(GET_WAREHOUSES);
@@ -12,17 +13,35 @@ function WarehouseStockMovementComponent(){
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
   return (
-    <div>
-        <select value={selectedWarehouseId} onChange={(e) => {setSelectedWarehouseId(e.target.value);}}>
+    <Container>
+    <Row>
+      <Col xs={12} md={6}>
+        <Form.Group controlId="selectware">
+          <Form.Label>Select Warehouse</Form.Label>
+          <Form.Control
+            as="select"
+            value={selectedWarehouseId}
+            onChange={(e) => setSelectedWarehouseId(e.target.value)}
+          >
             {warehouses.map((warehouse: Warehouse) => (
-            <option key={warehouse.id} value={warehouse.id}>
+              <option key={warehouse.id} value={warehouse.id}>
                 {warehouse.name}
-            </option>
+              </option>
             ))}
-        </select>
-        <WarehouseStockMovement selectedWarehouseId={selectedWarehouseId}/>
-        <WarehouseStockList selectedWarehouseId={selectedWarehouseId}/>
-    </div>
+          </Form.Control>
+        </Form.Group>
+      </Col>
+    </Row>
+
+    <Row>
+      <Col xs={12} md={6}>
+        <WarehouseStockMovement selectedWarehouseId={selectedWarehouseId} />
+      </Col>
+      <Col xs={12} md={6}>
+        <WarehouseStockList selectedWarehouseId={selectedWarehouseId} />
+      </Col>
+    </Row>
+  </Container>
   );
 };
 

@@ -68,6 +68,11 @@ const seedData = async () => {
       'INSERT INTO movements(date, type, product_id, warehouse_id, amount) VALUES($1, $2, $3, $4, $5)',
       ['2023-11-14', 'import', 4, 2, 1.0]
     );
+    await pool.query(
+      'INSERT INTO movements(date, type, product_id, warehouse_id, amount) VALUES($1, $2, $3, $4, $5)',
+      ['2023-11-14', 'import', 5, 3, 1.0]
+    );
+
 
     const importMovementsResult = await pool.query('SELECT * FROM movements WHERE type = $1', [
       'import',

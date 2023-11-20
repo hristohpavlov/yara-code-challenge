@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { ADD_PRODUCT } from '../../graphql/mutations';
 import { GET_PRODUCTS } from '../../graphql/queries';
-
+import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 function ProductEntry(){
   const [name, setName] = useState('');
   const [size, setSize] = useState(0.0);
@@ -27,21 +27,44 @@ function ProductEntry(){
   };
 
   return (
-    <div>
+    <Container>
       <h2>Product Entry</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Name:</label>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-
-        <label>Size:</label>
-        <input type="number" value={size} onChange={(e) => setSize(parseFloat(e.target.value))} required />
-
-        <label>Hazardous:</label>
-        <input type="checkbox" checked={hazardous} onChange={() => setHazardous(!hazardous)} />
-
-        <button type="submit">Add Product</button>
-      </form>
-    </div>
+      <Form onSubmit={handleSubmit}>
+        <Row>
+          <Col md={6}>
+            <Form.Group controlId="formName">
+              <Form.Label>Name:</Form.Label>
+              <Form.Control
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group controlId="formSize">
+              <Form.Label>Size:</Form.Label>
+              <Form.Control
+                type="number"
+                value={size}
+                onChange={(e) => setSize(parseFloat(e.target.value))}
+                required
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Form.Group controlId="formHazardous" className="mb-3">
+          <Form.Check
+            type="checkbox"
+            label="Hazardous"
+            checked={hazardous}
+            onChange={() => setHazardous(!hazardous)}
+          />
+        </Form.Group>
+        <Button type="submit">Add Product</Button>
+      </Form>
+    </Container>
   );
 };
 
